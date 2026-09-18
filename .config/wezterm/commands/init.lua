@@ -1,9 +1,9 @@
 local toggle_transparency = require 'commands.toggle-transparency'
-local toggle_theme = require 'commands.toggle-theme'
 
+-- toggle-theme fica fora: ele chama um script do tmux via /bin/bash,
+-- que não existe no Windows nem foi montado no labs ainda.
 local M = {
   toggle_transparency,
-  toggle_theme,
 }
 
 return M
