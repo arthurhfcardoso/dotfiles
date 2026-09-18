@@ -5,7 +5,7 @@ vim.opt.cmdheight = 0
 vim.opt.number = true
 
 -- Relative numbers
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 
 -- Disable wrap
 vim.wo.wrap = false

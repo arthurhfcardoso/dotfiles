@@ -1,6 +1,5 @@
 local wezterm = require 'wezterm'
 local commands = require 'commands'
-local constants = require 'constants'
 
 local config = wezterm.config_builder()
 
@@ -39,7 +38,6 @@ if is_windows then
   -- barra de título; o padding devolve essa faixa
   config.window_padding.top = 12
 end
-config.window_background_image = constants.bg_image
 config.macos_window_background_blur = 40
 if is_windows then
   -- equivalente Windows do blur do macOS; só aparece com opacidade < 1

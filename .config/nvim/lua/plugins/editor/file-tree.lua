@@ -37,7 +37,7 @@ return {
       view = {
         centralize_selection = true,
         adaptive_size = false,
-        side = 'right',
+        side = 'left',
         preserve_window_proportions = true,
         width = 40,
       },
