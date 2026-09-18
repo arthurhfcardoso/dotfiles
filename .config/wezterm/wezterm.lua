@@ -7,13 +7,12 @@ local config = wezterm.config_builder()
 local is_windows = wezterm.target_triple:find 'windows' ~= nil
 
 -- Font settings
-config.font_size = 13
+config.font_size = 12
 config.line_height = 1.2
 config.font = wezterm.font_with_fallback {
   {
-    family = 'CaskaydiaCove Nerd Font',
-    -- ss01 = itálico cursivo da Cascadia (o "comentário cursivo" do vídeo)
-    harfbuzz_features = { 'calt', 'liga', 'ss01' },
+    family = 'JetBrainsMono Nerd Font',
+    harfbuzz_features = { 'calt', 'liga' },
   },
   { family = 'Symbols Nerd Font Mono' },
 }
@@ -29,6 +28,13 @@ config.colors = {
 config.cursor_blink_rate = 0
 config.window_decorations = 'RESIZE'
 config.hide_tab_bar_if_only_one_tab = true
+if is_windows then
+  -- RESIZE puro no Windows quebra o snap (Win+Shift+setas come o topo da
+  -- janela, wezterm#1674). Com os botões integrados o Windows volta a
+  -- enxergar a borda; em troca a barra de abas fica sempre visível.
+  config.window_decorations = 'INTEGRATED_BUTTONS|RESIZE'
+  config.hide_tab_bar_if_only_one_tab = false
+end
 config.window_padding = {
   left = 0,
   right = 0,
