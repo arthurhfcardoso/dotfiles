@@ -96,19 +96,50 @@ wezterm.on('update-status', function(window, pane)
     :match '([^/\\]+)$' or ''
   process = process:gsub('%.exe$', '')
 
-  window:set_left_status(wezterm.format {
-    { Foreground = { Color = '#a6e3a1' } },
-    { Text = ' ' .. wezterm.nerdfonts.md_console .. ' ' .. window:active_workspace() .. ' ' },
-    { Foreground = { Color = '#6c7086' } },
-    { Text = '│' },
-    { Foreground = { Color = '#eba0ac' } },
-    { Text = ' ' .. wezterm.nerdfonts.md_cog .. ' ' .. process .. ' ' },
-    { Foreground = { Color = '#6c7086' } },
-    { Text = '│' },
-    { Foreground = { Color = '#89b4fa' } },
-    { Text = ' ' .. wezterm.nerdfonts.md_folder .. ' ' .. cwd .. ' ' },
-    { Foreground = { Color = '#6c7086' } },
-    { Text = '│' },
+  -- mesma paleta e mesmos separadores do tema do oh-my-posh
+  local omp = { black = '#262B44', yellow = '#F3AE35', orange = '#F07623', blue = '#4B95E9', white = '#E0DEF4' }
+  local host = wezterm.hostname()
+  if uri and type(uri) == 'userdata' and uri.host and uri.host ~= '' then
+    host = uri.host
+  end
+  local blocks = {
+    { bg = omp.yellow, fg = omp.black, text = wezterm.nerdfonts.md_console .. ' ' .. host },
+    { bg = omp.orange, fg = omp.white, text = '{ea83} ' .. cwd },
+    { bg = omp.blue, fg = omp.white, text = wezterm.nerdfonts.md_cog .. ' ' .. process },
+  }
+
+  local items = {
+    { Background = { Color = 'none' } },
+    { Foreground = { Color = blocks[1].bg } },
+    { Text = '{e0b6}' },
+  }
+  for i, b in ipairs(blocks) do
+    table.insert(items, { Background = { Color = b.bg } })
+    table.insert(items, { Foreground = { Color = b.fg } })
+    table.insert(items, { Text = ' ' .. b.text .. ' ' })
+    local next_bg = blocks[i + 1] and blocks[i + 1].bg or 'none'
+    table.insert(items, { Background = { Color = next_bg } })
+    table.insert(items, { Foreground = { Color = b.bg } })
+    table.insert(items, { Text = blocks[i + 1] and '{e0b0}' or '{e0b4}' })
+  end
+  table.insert(items, 'ResetAttributes')
+  table.insert(items, { Text = ' ' })
+
+  window:set_left_status(wezterm.format(items))
+
+  -- lado direito: o que era o rprompt "in pwsh at hh:mm:ss" do omp
+  window:set_right_status(wezterm.format {
+    { Foreground = { Color = omp.white } },
+    { Text = 'in ' },
+    { Foreground = { Color = omp.blue } },
+    { Attribute = { Intensity = 'Bold' } },
+    { Text = process },
+    'ResetAttributes',
+    { Foreground = { Color = omp.white } },
+    { Text = ' at ' },
+    { Foreground = { Color = omp.blue } },
+    { Attribute = { Intensity = 'Bold' } },
+    { Text = wezterm.strftime '%H:%M:%S' .. ' ' },
   })
 end)
 
